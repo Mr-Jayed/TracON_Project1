@@ -9,5 +9,11 @@ Future<void> main() async {
     url:'https://bmynlzludgipzbunndrh.supabase.co',
     anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJteW5semx1ZGdpcHpidW5uZHJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxODY0MTUsImV4cCI6MjA3MTc2MjQxNX0.EH3FlCPNVOGRKsMGqVC3jJ_uwrgiJAL5bxIiXQI2OtU',
   );
+
+  FlutterError.onError = (details) {
+    FlutterError.presentError(details);
+    debugPrint("Global Error: ${details.exception}");
+  };
+
   runApp(const TrackOnApp());
 }

@@ -5,103 +5,109 @@ class WelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: const Color(0xFF0A0A0A),
       body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              flex: 3,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.shield, size: 80, color: Colors.tealAccent),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'TrackOn',
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.tealAccent,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Car Security & Control System',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w300,
-                      color: Colors.grey[400],
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.directions_car,
-                      size: 100, color: Colors.blueAccent),
-                  const SizedBox(height: 20),
-                  Text(
-                    'Secure • Monitor • Control',
-                    style: TextStyle(fontSize: 14, color: Colors.grey[500]),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 32),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.tealAccent,
-                          foregroundColor: Colors.black,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+        child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.08),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 40),
+                        // Brand Icon
+                        Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            color: Colors.tealAccent.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: Colors.tealAccent.withOpacity(0.3)),
+                          ),
+                          child: Icon(
+                            Icons.sensors,
+                            color: Colors.tealAccent,
+                            size: screenHeight * 0.06,
                           ),
                         ),
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/login');
-                        },
-                        child: const Text('Login',
-                            style: TextStyle(fontSize: 18)),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      width: double.infinity,
-                      child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: Colors.tealAccent),
-                          foregroundColor: Colors.tealAccent,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                        const SizedBox(height: 30),
+                        Text(
+                          'TRACKON\nSYSTEMS',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: screenWidth * 0.1,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 2,
+                            height: 1.1,
                           ),
                         ),
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/signup');
-                        },
-                        child: const Text('Sign Up',
-                            style: TextStyle(fontSize: 18)),
-                      ),
+                        const SizedBox(height: 15),
+                        Text(
+                          'Universal remote telemetry and vehicle command terminal.',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.6),
+                            fontSize: screenWidth * 0.04,
+                            height: 1.5,
+                          ),
+                        ),
+                        const SizedBox(height: 60),
+
+                        // Navigation Buttons
+                        _buildButton(
+                          context,
+                          'SIGN IN',
+                          Colors.tealAccent,
+                          Colors.black,
+                              () => Navigator.pushNamed(context, '/login'),
+                        ),
+
+                        const SizedBox(height: 15),
+
+                        _buildButton(
+                          context,
+                          'REGISTER NEW DEVICE',
+                          Colors.white.withOpacity(0.05),
+                          Colors.tealAccent,
+                              () => Navigator.pushNamed(context, '/signup'),
+                          hasBorder: true,
+                        ),
+                        const SizedBox(height: 40),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          ],
+              );
+            }
+        ),
+      ),
+    );
+  }
+
+  Widget _buildButton(BuildContext context, String text, Color bgColor, Color textColor, VoidCallback onPressed, {bool hasBorder = false}) {
+    return SizedBox(
+      width: double.infinity,
+      height: 60,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: bgColor,
+          foregroundColor: textColor,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+            side: hasBorder ? const BorderSide(color: Colors.tealAccent, width: 0.5) : BorderSide.none,
+          ),
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5),
         ),
       ),
     );

@@ -5,12 +5,26 @@ import 'login_page.dart';
 import 'signup_page.dart';
 import 'home_page.dart';
 
+void main() async {
+  // Ensure engine is ready
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Supabase
+  await Supabase.initialize(
+    url: 'https://your-project.supabase.co',
+    anonKey: 'your-anon-key',
+  );
+
+  runApp(const TrackOnApp());
+}
+
 class TrackOnApp extends StatelessWidget {
   const TrackOnApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final user = Supabase.instance.client.auth.currentUser;
+    // Check if user is already logged in
+    final session = Supabase.instance.client.auth.currentSession;
 
     return MaterialApp(
       title: 'TrackOn',
@@ -21,15 +35,13 @@ class TrackOnApp extends StatelessWidget {
           primary: Colors.tealAccent,
           secondary: Colors.blueAccent,
         ),
-        textTheme: const TextTheme(
-          bodyMedium: TextStyle(color: Colors.white),
-        ),
       ),
-      initialRoute: user != null ? '/home' : '/',
+      // If session exists, jump to home, else show welcome
+      initialRoute: session != null ? '/home' : '/',
       routes: {
         '/': (context) => const WelcomePage(),
         '/login': (context) => const LoginPage(),
-        '/signup': (context) => const SignUpPage(),
+        '/signup': (context) => const SignupPage(),
         '/home': (context) => const HomePage(),
       },
     );
