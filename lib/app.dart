@@ -5,18 +5,6 @@ import 'login_page.dart';
 import 'signup_page.dart';
 import 'home_page.dart';
 
-void main() async {
-  // Ensure engine is ready
-  WidgetsFlutterBinding.ensureInitialized();
-
-  // Initialize Supabase
-  await Supabase.initialize(
-    url: 'https://your-project.supabase.co',
-    anonKey: 'your-anon-key',
-  );
-
-  runApp(const TrackOnApp());
-}
 
 class TrackOnApp extends StatelessWidget {
   const TrackOnApp({super.key});
@@ -36,7 +24,6 @@ class TrackOnApp extends StatelessWidget {
           secondary: Colors.blueAccent,
         ),
       ),
-      // If session exists, jump to home, else show welcome
       initialRoute: session != null ? '/home' : '/',
       routes: {
         '/': (context) => const WelcomePage(),

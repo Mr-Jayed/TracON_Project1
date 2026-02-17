@@ -72,7 +72,7 @@ class WelcomePage extends StatelessWidget {
 
                         _buildButton(
                           context,
-                          'REGISTER NEW DEVICE',
+                          'REGISTER AS NEW USER',
                           Colors.white.withOpacity(0.05),
                           Colors.tealAccent,
                               () => Navigator.pushNamed(context, '/signup'),
