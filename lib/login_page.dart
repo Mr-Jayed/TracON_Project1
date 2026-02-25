@@ -13,11 +13,22 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordController = TextEditingController();
   bool _isLoading = false;
 
+  final RegExp _emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+
   Future<void> _signIn() async {
-    // Basic validation
-    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please enter ID and Access Code')),
+      );
+      return;
+    }
+
+    if (!_emailRegex.hasMatch(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Invalid Email format')),
       );
       return;
     }
@@ -26,12 +37,11 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       await Supabase.instance.client.auth.signInWithPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
+        email: email,
+        password: password,
       );
 
       if (mounted) {
-        // Successful login - clear stack and go home
         Navigator.pushReplacementNamed(context, '/home');
       }
     } catch (e) {
@@ -50,61 +60,37 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       backgroundColor: const Color(0xFF0A0A0A),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.08),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 40),
-              IconButton(
-                onPressed: () => Navigator.pop(context),
-                icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
-                padding: EdgeInsets.zero,
-                alignment: Alignment.centerLeft,
-              ),
-              const SizedBox(height: 30),
-              Text(
-                'SECURE\nACCESS',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: screenWidth * 0.08,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.5,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                'Enter your credentials to connect.',
-                style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 14),
-              ),
+              const Text("COMMANDER LOGIN", style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold, letterSpacing: 2)),
+              const Text("RESTRICTED AREA - AUTH REQUIRED", style: TextStyle(color: Colors.white24, fontSize: 9, letterSpacing: 1)),
               const SizedBox(height: 50),
 
-              _buildTextField(_emailController, 'COMMANDER ID', Icons.alternate_email, false),
+              _buildTextField(_emailController, "COMMUNICATION ID", Icons.email_outlined, false),
               const SizedBox(height: 25),
-              _buildTextField(_passwordController, 'ACCESS CODE', Icons.shield_outlined, true),
+              _buildTextField(_passwordController, "ACCESS CODE", Icons.lock_outline, true),
 
-              const SizedBox(height: 60),
+              const SizedBox(height: 50),
 
               SizedBox(
                 width: double.infinity,
-                height: 60,
+                height: 55,
                 child: ElevatedButton(
                   onPressed: _isLoading ? null : _signIn,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white.withOpacity(0.05),
-                    foregroundColor: Colors.tealAccent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      side: const BorderSide(color: Colors.tealAccent, width: 0.5),
-                    ),
+                    backgroundColor: Colors.tealAccent,
+                    foregroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                   ),
                   child: _isLoading
-                      ? const CircularProgressIndicator(color: Colors.tealAccent)
+                      ? const CircularProgressIndicator(color: Colors.black)
                       : const Text('AUTHORIZE', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 2)),
                 ),
               ),

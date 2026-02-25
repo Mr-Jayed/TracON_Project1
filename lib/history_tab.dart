@@ -14,7 +14,6 @@ class _HistoryTabState extends State<HistoryTab> {
   final supabase = Supabase.instance.client;
   bool _isLoading = true;
 
-  // Stores coordinates grouped by date
   Map<String, List<LatLng>> _routes = {};
 
   @override
@@ -36,7 +35,6 @@ class _HistoryTabState extends State<HistoryTab> {
         String timestamp = row['created_at'].toString();
         String date = timestamp.substring(0, 10);
 
-        // Safe Casting
         double lat = (row['latitude'] as num).toDouble();
         double lon = (row['longitude'] as num).toDouble();
 
@@ -119,13 +117,11 @@ class _HistoryTabState extends State<HistoryTab> {
                     },
                   ),
                   PolylineLayer(
-                    // FIX: Explicitly typed Polyline<Object> to match flutter_map 8.x requirements
                     polylines: [
                       Polyline<Object>(
                         points: points,
                         color: Colors.tealAccent,
                         strokeWidth: 3,
-                        // FIX: Removed 'isDotted' as it is handled via strokePattern in newer versions
                       ),
                     ],
                   ),

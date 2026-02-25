@@ -11,7 +11,6 @@ class TrackOnApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Check if user is already logged in
     final session = Supabase.instance.client.auth.currentSession;
 
     return MaterialApp(

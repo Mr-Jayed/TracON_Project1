@@ -3,7 +3,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'dart:async';
 
-// Internal Page Imports
 import 'event_page.dart';
 import 'map_page.dart';
 import 'profile_page.dart';
@@ -20,23 +19,23 @@ class _HomePageState extends State<HomePage> {
   final supabase = Supabase.instance.client;
   final AudioPlayer _audioPlayer = AudioPlayer();
 
-  // --- 1. STATE VARIABLES ---
-  int _currentIndex = 0; // For Bottom Navigation
+
+  int _currentIndex = 0;
   bool _loading = true;
   bool _isVehicleOnline = false;
   bool _isAlertActive = false;
   DateTime? _lastSeen;
 
-  // Vehicle Data
+
   String _engineStatus = 'OFF';
   String _doorStatus = 'LOCKED';
   String _distance = '--';
 
-  // Button States
+
   bool _isEnginePending = false;
   bool _isDoorPending = false;
 
-  // Stream Subscriptions
+
   StreamSubscription? _telemetrySub, _commandSub, _securitySub;
   Timer? _heartbeatTimer;
   List<Map<String, dynamic>> _recentEvents = [];
@@ -45,7 +44,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _initializeData();
-    // Heartbeat check every 5 seconds
+
     _heartbeatTimer = Timer.periodic(
       const Duration(seconds: 5),
           (_) => _updateOnlineStatus(),
@@ -62,7 +61,7 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  // --- 2. DATA & STREAMS LOGIC ---
+
 
   void _initializeData() async {
     await _fetchInitialState();
@@ -70,7 +69,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _setupRealtimeStreams() {
-    // A. Commands Listener
+
     _commandSub = supabase
         .from('device_commands')
         .stream(primaryKey: ['id'])
@@ -95,7 +94,7 @@ class _HomePageState extends State<HomePage> {
       }
     });
 
-    // B. Telemetry Listener
+
     _telemetrySub = supabase
         .from('ultrasonic_data')
         .stream(primaryKey: ['id'])
@@ -109,7 +108,7 @@ class _HomePageState extends State<HomePage> {
       }
     });
 
-    // C. Security Listener
+
     _securitySub = supabase
         .from('events')
         .stream(primaryKey: ['id'])
@@ -136,7 +135,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  // --- 3. CORE UI BUILDER ---
+
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +153,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // --- 4. UI COMPONENTS ---
+
 
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
@@ -382,7 +381,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // --- 5. LOGIC HELPERS ---
+
 
   Future<void> _sendCommand(String type, String action) async {
     setState(() {

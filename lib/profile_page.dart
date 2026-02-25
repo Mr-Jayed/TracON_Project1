@@ -18,14 +18,13 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    // Initialize with current metadata
     _nameController.text = user?.userMetadata?['full_name'] ?? "Unknown Commander";
   }
 
   Future<void> _updateProfile() async {
     setState(() => _isLoading = true);
     try {
-      // Update metadata in Supabase Auth
+
       await Supabase.instance.client.auth.updateUser(
         UserAttributes(
           data: {'full_name': _nameController.text.trim()},
@@ -78,7 +77,6 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           children: [
             const SizedBox(height: 20),
-            // Avatar
             Center(
               child: Stack(
                 children: [
@@ -109,7 +107,6 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             const SizedBox(height: 40),
 
-            // Identity Field
             _buildInfoField(
               label: "IDENTITY (FULL NAME)",
               controller: _nameController,
@@ -118,7 +115,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             const SizedBox(height: 25),
 
-            // Email Field (Read Only)
+
             _buildInfoField(
               label: "COMMUNICATION CHANNEL (EMAIL)",
               controller: TextEditingController(text: user?.email),
@@ -127,7 +124,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             const SizedBox(height: 25),
 
-            // Device ID (Read Only)
+
             _buildInfoField(
               label: "LINKED HARDWARE",
               controller: TextEditingController(text: "CAR_001_ESP32"),
@@ -137,7 +134,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
             const SizedBox(height: 50),
 
-            // Action Button
+
             SizedBox(
               width: double.infinity,
               height: 60,
@@ -174,7 +171,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: const Text("CANCEL", style: TextStyle(color: Colors.white24, fontSize: 10)),
               ),
 
-            // Go to Dashboard Button (Only if not editing)
             if (!_isEditing)
               Padding(
                 padding: const EdgeInsets.only(top: 20),

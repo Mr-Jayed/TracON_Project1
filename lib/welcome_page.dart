@@ -23,7 +23,6 @@ class WelcomePage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 40),
-                        // Brand Icon
                         Container(
                           padding: const EdgeInsets.all(15),
                           decoration: BoxDecoration(
@@ -59,7 +58,6 @@ class WelcomePage extends StatelessWidget {
                         ),
                         const SizedBox(height: 60),
 
-                        // Navigation Buttons
                         _buildButton(
                           context,
                           'SIGN IN',

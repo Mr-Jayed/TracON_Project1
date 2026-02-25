@@ -16,7 +16,6 @@ class _MapPageState extends State<MapPage> {
   final MapController _mapController = MapController();
   StreamSubscription? _locationSub;
 
-  // Initial center position (e.g., Dhaka)
   LatLng _currentPos = const LatLng(23.8103, 90.4125);
   double _currentSpeed = 0.0;
   bool _hasLocation = false;
@@ -34,8 +33,6 @@ class _MapPageState extends State<MapPage> {
         .eq('device_id', 'car_001')
         .listen((data) {
       if (data.isNotEmpty && mounted) {
-        // --- SAFE CASTING LOGIC ---
-        // Converts num to double to avoid "int is not a subtype of double" error
         final double lat = (data.last['latitude'] as num).toDouble();
         final double lng = (data.last['longitude'] as num).toDouble();
         final double speed = (data.last['speed'] as num? ?? 0.0).toDouble();
@@ -46,7 +43,7 @@ class _MapPageState extends State<MapPage> {
           _hasLocation = true;
         });
 
-        // Smoothly move camera to new location
+
         _mapController.move(_currentPos, 15.0);
       }
     }, onError: (error) {
@@ -84,7 +81,6 @@ class _MapPageState extends State<MapPage> {
               TileLayer(
                 urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                 userAgentPackageName: 'com.jayed.trackon.car_tracker',
-                // Optional: Invert tiles for Dark Mode look
                 tileBuilder: (context, tileWidget, tile) {
                   return ColorFiltered(
                     colorFilter: const ColorFilter.matrix([
@@ -119,7 +115,6 @@ class _MapPageState extends State<MapPage> {
             ],
           ),
 
-          // Speed & Status HUD
           if (_hasLocation)
             Positioned(
               bottom: 40,
@@ -134,7 +129,6 @@ class _MapPageState extends State<MapPage> {
               ),
             ),
 
-          // Loading Overlay
           if (!_hasLocation)
             Container(
               color: Colors.black87,

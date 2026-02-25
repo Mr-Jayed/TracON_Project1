@@ -24,7 +24,6 @@ class EventPage extends StatelessWidget {
         centerTitle: true,
       ),
       body: StreamBuilder<List<Map<String, dynamic>>>(
-        // Listen to the 'events' table for this specific device
         stream: supabase
             .from('events')
             .stream(primaryKey: ['id'])
@@ -59,7 +58,7 @@ class EventPage extends StatelessWidget {
               // Date formatting for the log
               final String createdAt = event['created_at'].toString();
               final String timestamp = createdAt.length > 16
-                  ? createdAt.substring(11, 19) // HH:mm:ss
+                  ? createdAt.substring(11, 19)
                   : "--:--:--";
 
               final bool isAlert = type.contains("VIBRATION") || type.contains("INTRUSION");
@@ -78,7 +77,6 @@ class EventPage extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    // Status Icon
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
@@ -93,7 +91,6 @@ class EventPage extends StatelessWidget {
                     ),
                     const SizedBox(width: 15),
 
-                    // Event Details
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,7 +116,6 @@ class EventPage extends StatelessWidget {
                       ),
                     ),
 
-                    // Time Segment
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
@@ -128,7 +124,7 @@ class EventPage extends StatelessWidget {
                           style: const TextStyle(
                             color: Colors.white12,
                             fontSize: 9,
-                            fontFamily: 'Courier', // Monospace feel
+                            fontFamily: 'Courier',
                           ),
                         ),
                         const SizedBox(height: 4),

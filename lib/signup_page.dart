@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'profile_page.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -18,6 +17,9 @@ class _SignupPageState extends State<SignupPage> {
   String? _errorMessage;
   bool _loading = false;
 
+  final RegExp _emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+  final RegExp _passwordRegex = RegExp(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$');
+
   Future<void> _signUp() async {
     setState(() { _errorMessage = null; _loading = true; });
 
@@ -26,33 +28,59 @@ class _SignupPageState extends State<SignupPage> {
     final password = _passwordController.text.trim();
     final confirm = _confirmController.text.trim();
 
-    if (name.isEmpty || email.isEmpty || password.length < 6 || password != confirm) {
+    if (name.isEmpty || email.isEmpty || password.isEmpty) {
       setState(() {
-        _errorMessage = 'Please check your inputs (Min 6 chars for password)';
+        _errorMessage = 'All fields are required for initialization.';
+        _loading = false;
+      });
+      return;
+    }
+
+
+    if (!_emailRegex.hasMatch(email)) {
+      setState(() {
+        _errorMessage = 'Invalid Communication ID (Email format).';
+        _loading = false;
+      });
+      return;
+    }
+
+
+    if (!_passwordRegex.hasMatch(password)) {
+      setState(() {
+        _errorMessage = 'Access Code must have 8+ chars, 1 letter, 1 number & 1 symbol.';
+        _loading = false;
+      });
+      return;
+    }
+
+
+    if (password != confirm) {
+      setState(() {
+        _errorMessage = 'Access Codes do not match.';
         _loading = false;
       });
       return;
     }
 
     try {
-      final response = await Supabase.instance.client.auth.signUp(
+      await Supabase.instance.client.auth.signUp(
         email: email,
         password: password,
         data: {'full_name': name},
       );
 
-      if (response.user != null && mounted) {
-        // DIRECT REDIRECT TO PROFILE PAGE AS REQUESTED
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (_) => const ProfilePage()),
-              (route) => false,
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Registration Successful. Please Login.')),
         );
+        Navigator.pop(context);
       }
     } catch (e) {
-      setState(() => _errorMessage = e.toString());
-    } finally {
-      if (mounted) setState(() => _loading = false);
+      setState(() {
+        _errorMessage = e.toString();
+        _loading = false;
+      });
     }
   }
 
@@ -68,39 +96,39 @@ class _SignupPageState extends State<SignupPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 30),
-              IconButton(
-                onPressed: () => Navigator.pop(context),
-                icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
-              ),
-              const SizedBox(height: 20),
-              Text('NEW\nCOMMANDER',
-                  style: TextStyle(color: Colors.white, fontSize: screenWidth * 0.08, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 30),
-              _buildField(_nameController, 'FULL NAME', Icons.person_outline, false, screenWidth),
-              const SizedBox(height: 15),
-              _buildField(_emailController, 'EMAIL', Icons.alternate_email, false, screenWidth),
-              const SizedBox(height: 15),
-              _buildField(_passwordController, 'ACCESS CODE', Icons.lock_outline, true, screenWidth),
-              const SizedBox(height: 15),
-              _buildField(_confirmController, 'CONFIRM CODE', Icons.shield_outlined, true, screenWidth),
-
-              if (_errorMessage != null)
-                Padding(
-                    padding: const EdgeInsets.only(top: 15),
-                    child: Text(_errorMessage!, style: const TextStyle(color: Colors.redAccent, fontSize: 12))
-                ),
+              const SizedBox(height: 50),
+              const Text("NEW COMMANDER", style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold, letterSpacing: 2)),
+              const Text("INITIALIZE TRACKON PROTOCOL", style: TextStyle(color: Colors.tealAccent, fontSize: 10, letterSpacing: 1)),
 
               const SizedBox(height: 40),
+
+              if (_errorMessage != null)
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  margin: const EdgeInsets.only(bottom: 20),
+                  decoration: BoxDecoration(color: Colors.redAccent.withOpacity(0.1), borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.redAccent.withOpacity(0.3))),
+                  child: Text(_errorMessage!, style: const TextStyle(color: Colors.redAccent, fontSize: 11)),
+                ),
+
+              _buildField(_nameController, "FULL NAME", Icons.person_outline, false, screenWidth),
+              const SizedBox(height: 20),
+              _buildField(_emailController, "EMAIL ADDRESS", Icons.email_outlined, false, screenWidth),
+              const SizedBox(height: 20),
+              _buildField(_passwordController, "ACCESS CODE", Icons.lock_outline, true, screenWidth),
+              const SizedBox(height: 20),
+              _buildField(_confirmController, "CONFIRM ACCESS CODE", Icons.shield_outlined, true, screenWidth),
+
+              const SizedBox(height: 40),
+
               SizedBox(
                 width: double.infinity,
-                height: 60,
+                height: 55,
                 child: ElevatedButton(
                   onPressed: _loading ? null : _signUp,
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.tealAccent,
-                      foregroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))
+                    backgroundColor: Colors.tealAccent,
+                    foregroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                   ),
                   child: _loading
                       ? const CircularProgressIndicator(color: Colors.black)
@@ -119,7 +147,7 @@ class _SignupPageState extends State<SignupPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(color: Colors.tealAccent, fontSize: 10, fontWeight: FontWeight.bold)),
+        Text(label, style: const TextStyle(color: Colors.tealAccent, fontSize: 10, fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
         TextField(
           controller: controller,
