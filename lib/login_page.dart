@@ -62,8 +62,9 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF0A0A0A),
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -78,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
               const Text("RESTRICTED AREA - AUTH REQUIRED", style: TextStyle(color: Colors.white24, fontSize: 9, letterSpacing: 1)),
               const SizedBox(height: 50),
 
-              _buildTextField(_emailController, "COMMUNICATION ID", Icons.email_outlined, false),
+              _buildTextField(_emailController, "Email ID", Icons.email_outlined, false),
               const SizedBox(height: 25),
               _buildTextField(_passwordController, "ACCESS CODE", Icons.lock_outline, true),
 
