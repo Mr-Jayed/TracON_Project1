@@ -69,6 +69,11 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back_ios, color: Colors.white24, size: 20),
+                onPressed: () => Navigator.pushNamed(context, '/'),
+              ),
+              const SizedBox(height: 20),
               const Text("COMMANDER LOGIN", style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold, letterSpacing: 2)),
               const Text("RESTRICTED AREA - AUTH REQUIRED", style: TextStyle(color: Colors.white24, fontSize: 9, letterSpacing: 1)),
               const SizedBox(height: 50),
@@ -92,6 +97,24 @@ class _LoginPageState extends State<LoginPage> {
                   child: _isLoading
                       ? const CircularProgressIndicator(color: Colors.black)
                       : const Text('AUTHORIZE', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 2)),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Center(
+                child: TextButton(
+                  onPressed: () => Navigator.pushNamed(context, '/signup'),
+                  child: RichText(
+                    text: const TextSpan(
+                      text: "NEW COMMANDER? ",
+                      style: TextStyle(color: Colors.white24, fontSize: 11, letterSpacing: 1),
+                      children: [
+                        TextSpan(
+                          text: "REGISTER",
+                          style: TextStyle(color: Colors.tealAccent, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ],

@@ -96,7 +96,14 @@ class _SignupPageState extends State<SignupPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 50),
+              const SizedBox(height: 10),
+              IconButton(
+                padding: EdgeInsets.zero,
+                alignment: Alignment.centerLeft,
+                icon: const Icon(Icons.arrow_back_ios, color: Colors.white24, size: 20),
+                onPressed: () => Navigator.pushNamed(context, '/'),
+              ),
+              const SizedBox(height: 25),
               const Text("NEW COMMANDER", style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold, letterSpacing: 2)),
               const Text("INITIALIZE TRACKON PROTOCOL", style: TextStyle(color: Colors.tealAccent, fontSize: 10, letterSpacing: 1)),
 
@@ -136,6 +143,23 @@ class _SignupPageState extends State<SignupPage> {
                 ),
               ),
               const SizedBox(height: 20),
+              Center(
+                child: TextButton(
+                  onPressed: () => Navigator.pushNamed(context, '/login'),
+                  child: RichText(
+                    text: const TextSpan(
+                      text: "ALREADY AUTHORIZED? ",
+                      style: TextStyle(color: Colors.white24, fontSize: 11, letterSpacing: 1),
+                      children: [
+                        TextSpan(
+                          text: "SIGN IN",
+                          style: TextStyle(color: Colors.tealAccent, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
