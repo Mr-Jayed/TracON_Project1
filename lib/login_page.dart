@@ -26,13 +26,6 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
-    if (!_emailRegex.hasMatch(email)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Invalid Email format')),
-      );
-      return;
-    }
-
     setState(() => _isLoading = true);
 
     try {
@@ -47,10 +40,7 @@ class _LoginPageState extends State<LoginPage> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text('Access Denied: ${e.toString()}'),
-              backgroundColor: Colors.redAccent
-          ),
+          SnackBar(content: Text('Access Denied: ${e.toString()}')),
         );
       }
     } finally {
@@ -62,64 +52,82 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF0A0A0A),
-      resizeToAvoidBottomInset: true,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 30),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.arrow_back_ios, color: Colors.white24, size: 20),
-                onPressed: () => Navigator.pushNamed(context, '/'),
-              ),
-              const SizedBox(height: 20),
-              const Text("COMMANDER LOGIN", style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold, letterSpacing: 2)),
-              const Text("RESTRICTED AREA - AUTH REQUIRED", style: TextStyle(color: Colors.white24, fontSize: 9, letterSpacing: 1)),
-              const SizedBox(height: 50),
-
-              _buildTextField(_emailController, "Email ID", Icons.email_outlined, false),
-              const SizedBox(height: 25),
-              _buildTextField(_passwordController, "ACCESS CODE", Icons.lock_outline, true),
-
-              const SizedBox(height: 50),
-
-              SizedBox(
-                width: double.infinity,
-                height: 55,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _signIn,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.tealAccent,
-                    foregroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                  ),
-                  child: _isLoading
-                      ? const CircularProgressIndicator(color: Colors.black)
-                      : const Text('AUTHORIZE', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 2)),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Center(
-                child: TextButton(
-                  onPressed: () => Navigator.pushNamed(context, '/signup'),
-                  child: RichText(
-                    text: const TextSpan(
-                      text: "NEW COMMANDER? ",
-                      style: TextStyle(color: Colors.white24, fontSize: 11, letterSpacing: 1),
-                      children: [
-                        TextSpan(
-                          text: "REGISTER",
-                          style: TextStyle(color: Colors.tealAccent, fontWeight: FontWeight.bold),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      IconButton(
+                        padding: EdgeInsets.zero,
+                        alignment: Alignment.centerLeft,
+                        icon: const Icon(Icons.arrow_back_ios, color: Colors.white24, size: 20),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                      const SizedBox(height: 20),
+                      const Text(
+                        "SYSTEM LOGIN",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 2,
                         ),
-                      ],
-                    ),
+                      ),
+                      const Text(
+                        "ENTER SECURE CREDENTIALS",
+                        style: TextStyle(color: Colors.white24, fontSize: 10, letterSpacing: 1),
+                      ),
+                      const SizedBox(height: 40),
+                      _buildTextField(_emailController, "COMMANDER ID (EMAIL)", Icons.person_outline, false),
+                      const SizedBox(height: 20),
+                      _buildTextField(_passwordController, "ACCESS CODE", Icons.lock_outline, true),
+                      const SizedBox(height: 40),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 55,
+                        child: ElevatedButton(
+                          onPressed: _isLoading ? null : _signIn,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.tealAccent,
+                            foregroundColor: Colors.black,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+                          child: _isLoading
+                              ? const CircularProgressIndicator(color: Colors.black)
+                              : const Text('AUTHORIZE', style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 2)),
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      Center(
+                        child: TextButton(
+                          onPressed: () => Navigator.pushNamed(context, '/signup'),
+                          child: RichText(
+                            text: const TextSpan(
+                              text: "NEW COMMANDER? ",
+                              style: TextStyle(color: Colors.white24, fontSize: 11),
+                              children: [
+                                TextSpan(
+                                  text: "INITIALIZE PROTOCOL",
+                                  style: TextStyle(color: Colors.tealAccent, fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );
