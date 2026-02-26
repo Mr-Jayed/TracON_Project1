@@ -3,6 +3,46 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class EventPage extends StatelessWidget {
   const EventPage({super.key});
+  Future<void> _clearAllEvents(BuildContext context) async {
+    final supabase = Supabase.instance.client;
+
+    bool? confirm = await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.black,
+        title: const Text("PURGE ALL LOGS?", style: TextStyle(color: Colors.redAccent, fontSize: 14)),
+        content: const Text("This action cannot be undone. All encrypted logs for CAR_001 will be wiped.", style: TextStyle(color: Colors.white70, fontSize: 12)),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text("CANCEL")),
+          TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text("CONFIRM PURGE", style: TextStyle(color: Colors.redAccent))
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      try {
+        await supabase
+            .from('events')
+            .delete()
+            .eq('device_id', 'car_001');
+
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("SYSTEM LOGS SUCCESSFULLY PURGED")),
+          );
+        }
+      } catch (e) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("ERROR: $e")),
+          );
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +62,13 @@ class EventPage extends StatelessWidget {
           ),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.delete_sweep, color: Colors.redAccent),
+            tooltip: "Clear All Logs",
+            onPressed: () => _clearAllEvents(context),
+          ),
+        ],
       ),
       body: StreamBuilder<List<Map<String, dynamic>>>(
         stream: supabase
