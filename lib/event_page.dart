@@ -34,6 +34,7 @@ class EventPage extends StatelessWidget {
             const SnackBar(content: Text("SYSTEM LOGS SUCCESSFULLY PURGED")),
           );
         }
+        Navigator.pushReplacementNamed(context, '/home');
       } catch (e) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
