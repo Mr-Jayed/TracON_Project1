@@ -127,7 +127,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
             _buildInfoField(
               label: "LINKED HARDWARE",
-              controller: TextEditingController(text: "CAR_001_ESP32"),
+              controller: TextEditingController(text: "car_001"),
               isEditable: false,
               icon: Icons.memory,
             ),
