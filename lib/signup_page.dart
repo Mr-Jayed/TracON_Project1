@@ -154,7 +154,7 @@ class _SignupPageState extends State<SignupPage> {
                         const SizedBox(height: 30),
                         Center(
                           child: TextButton(
-                            onPressed: () => Navigator.pop(context),
+                            onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
                             child: RichText(
                               text: const TextSpan(
                                 text: "ALREADY AUTHORIZED? ",
